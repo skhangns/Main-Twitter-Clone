@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+
+<section class="content">
+    <div class="main">
+        <div class="main-header">
+            <img src="/static/img/techis-logo.png" class="logo">
+            <a href="#">Home</a>
+        </div>
+    <section class="post_form">
+        <div class="my-icon">
+            <img src="/static/img/twitter.png" alt="">
+        </div>
+        <div class="input-area">
+        <form action="/" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" maxlength="14"required />
+            <textarea name="body" rows="3" placeholder="What's happening?" maxlength="140" required></textarea>
+            <input class="form-control form-control-sm"type="file" name="image" />
+            <div class="bottom">
+            <input class="btn" type="submit" value="Tweet" />
+            </div>
+        </form>
+        </div>
+    </section>
+    <section class="posts">
+        <ul>
+        {%if posts.count == 0 %}
+            <p class="p-3">There is no tweet now.</p>
+        {% else %}
+            {% for post in posts %}
+            <li>
+                <img class="menu_icon js-menu-icon" src="{% static 'img/menu.png' %}" />
+                <div class="menu">
+                    <a href="/delete/{{ post.id }}/">delete</a>
+                    <a href="/edit/{{ post.id }}/">edit</a>
+                </div>
+                <div class="logo">
+                <a href="#"><img src="/static/img/twitter.png" /></a>
+                </div>
+                <div class="name_body">
+                    <div class="name">{{ post.name }}</div>
+                    <div class="datetime">{{ post.created_at }}</div>
+                    <p>{{ post.body }}</p>
+                    <img src="{{post.image.url}}" alt="" class="postimage">
+                    <div class="icon">
+                    <a href="likes/{{ post.id }}"> <img class="like" src="{% static 'img/heart.png' %}" ></a>
+                    {{ post.like_count }}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/posts.js' %}"></script>
+    <script>$(function() {
+        // Executed when js-menu-icon is clicked
+        $('.js-menu-icon').click(function() {
+            // $(this) : Self elements, namely div.js-menu-icon
+            // next() : Next to div.js-menu-icon,namely div.menu
+            // toggle() : Switch show and Hide
+            $(this).next().toggle();
+        })
+    }) 
+    </script>
+    </div>
+</section>
+{% endblock %}
